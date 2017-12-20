@@ -12,7 +12,7 @@
 RootModule = 'PowerBI-Metadata.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.0.1'
+ModuleVersion = '0.1.1'
 
 # ID used to uniquely identify this module
 GUID = '2d2192d4-caf5-4d7c-8df2-18c02116aeab'
@@ -21,7 +21,7 @@ GUID = '2d2192d4-caf5-4d7c-8df2-18c02116aeab'
 Author = 'Craig Porteous'
 
 # Company or vendor of this module
-CompanyName = 'Unknown'
+CompanyName = 'CraigPorteous.com'
 
 # Copyright statement for this module
 Copyright = '(c) 2017 Craig Porteous. All rights reserved.'
