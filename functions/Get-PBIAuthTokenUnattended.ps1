@@ -123,8 +123,7 @@ Get-PBIAuthTokenUnattended -userName User@domain.com -tenantID "85b7f285-XXXX-XX
             $authBody = $null            
         }
         catch {
-            Write-Error "Authentication or Connection failure: $($_.Exception.Message)" 
-            throw $_            
+            throw "Authentication or Connection failure: $($_.Exception.Message)"            
         }
         Write-Verbose 'Authentication token retrieved'
         return $auth.access_token

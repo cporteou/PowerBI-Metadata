@@ -16,14 +16,14 @@ Optional parameter to restrict data to a specific Workspace ID
 Optional parameter to restrict data to a specific Workspace Name. The Workspace ID is retrieved using this name by the function
 
 .EXAMPLE
-Get-Reports -authToken $auth 
-Get-Reports -authToken $auth -workspaceID 1530055f-XXXX-XXXX-XXXX-ee8c87e4a648
-Get-Reports -authToken $auth -workspaceName 'Workspace Name'
+Get-Report -authToken $auth 
+Get-Report -authToken $auth -workspaceID 1530055f-XXXX-XXXX-XXXX-ee8c87e4a648
+Get-Report -authToken $auth -workspaceName 'Workspace Name'
 
 .NOTES
 General notes
 #>
-function Get-Reports{
+function Get-Report{
     
     [CmdletBinding()]
     Param

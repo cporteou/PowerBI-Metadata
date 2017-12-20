@@ -51,7 +51,7 @@ function Get-AzureTenantID{
     
     }
     catch {
-        
+        throw $_
     }
     return $tenantID
 }

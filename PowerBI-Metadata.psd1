@@ -74,7 +74,7 @@ FunctionsToExport = 'Get-AzureTenantID',
                     'Get-PBIAuthTokenUnattended', 
                     'Get-Reports',
                     'Get-Workspaces',
-                    'Get-WorkspaceUsers',
+                    'Get-WorkspaceUsers'
 
 # Cmdlets to export from this module
 CmdletsToExport = @()

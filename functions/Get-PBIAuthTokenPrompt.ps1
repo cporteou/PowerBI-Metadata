@@ -86,8 +86,7 @@ function Get-PBIAuthTokenPrompt
             $auth = $authContext.AcquireToken($resourceAppIdURI, $clientId, $redirectUrl, $promptBehaviour)
         }
         catch {
-            Write-Error "Authentication or Connection failure: $_.Exception.Message"
-            throw $_            
+            throw "Authentication or Connection failure: $_.Exception.Message"            
         }
         return $auth.AccessToken
     }
