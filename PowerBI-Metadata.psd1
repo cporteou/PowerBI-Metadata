@@ -101,13 +101,13 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        # Tags = @()
+        Tags = @('PowerBI','Metadata','data','BI')
 
         # A URL to the license for this module.
         # LicenseUri = ''
 
         # A URL to the main website for this project.
-        # ProjectUri = ''
+        ProjectUri = 'https://github.com/cporteou/PowerBI-Metadata'
 
         # A URL to an icon representing this module.
         # IconUri = ''

@@ -60,7 +60,7 @@ function Get-Report{
             elseif ($workspaceName) {
                 
                 Write-Verbose 'Workspace Name provided. Matching to ID & building API call'
-                $workspace = Get-Workspaces -authToken $authToken -workspaceName $workspaceName
+                $workspace = Get-Workspace -authToken $authToken -workspaceName $workspaceName
 
                 Write-Verbose 'Returning reports for specified Workspace'
                 $uri = "https://api.powerbi.com/v1.0/myorg/groups/$($Workspace.id)/reports"

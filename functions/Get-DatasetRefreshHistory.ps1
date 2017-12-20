@@ -74,7 +74,7 @@ function Get-DatasetRefreshHistory{
                 Write-Verbose 'Specific Dataset ID Provided'
                 if($workspaceName){                    
                     Write-Verbose 'Workspace Name provided. Matching to ID & building API call'
-                    $workspace = Get-Workspaces -authToken $authToken -workspaceName $workspaceName
+                    $workspace = Get-Workspace -authToken $authToken -workspaceName $workspaceName
                     $workspaceID = $workspace.id
                     # Need to escape the $top={N} usage in the API call
                     $uri = "https://api.powerbi.com/v1.0/myorg/groups/$($workspaceID)/datasets/$($datasetID)/refreshes/?`$top=$($TopN)"
@@ -99,15 +99,15 @@ function Get-DatasetRefreshHistory{
                 Write-Verbose 'No Dataset ID Provided. Returning refresh data for all Datasets'               
                 if($workspaceID){                    
                     Write-Verbose 'Returning datasets for specified Workspace'
-                    $datasets = Get-Datasets -authToken $authToken -workspaceID $workspaceID
+                    $datasets = Get-Dataset -authToken $authToken -workspaceID $workspaceID
                 }
                 elseif ($workspaceName) {
                     Write-Verbose 'Returning datasets for specified Workspace'
-                    $datasets = Get-Datasets -authToken $authToken -workspaceName $workspaceName
+                    $datasets = Get-Dataset -authToken $authToken -workspaceName $workspaceName
                 }
                 else {
                     Write-Verbose 'Returning datasets for ALL Workspace'
-                    $datasets = Get-Datasets -authToken $authToken
+                    $datasets = Get-Dataset -authToken $authToken
                 }
                 
                 $refreshes = @()

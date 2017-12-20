@@ -60,7 +60,7 @@ function Get-WorkspaceUser{
             elseif ($workspaceName) {
                 
                 Write-Verbose 'Workspace Name provided. Matching to ID & building API call'
-                $workspace = Get-Workspaces -authToken $authToken -workspaceName $workspaceName
+                $workspace = Get-Workspace -authToken $authToken -workspaceName $workspaceName
 
                 Write-Verbose 'Returning Users for specified Workspace'
                 $uri = "https://api.powerbi.com/v1.0/myorg/groups/$($workspace.id)/users"
@@ -70,7 +70,7 @@ function Get-WorkspaceUser{
             }
             else {
                 Write-Verbose 'Fetching all Workspaces'
-                $workspaces = Get-Workspaces -authToken $authToken 
+                $workspaces = Get-Workspace -authToken $authToken 
 
                 $workspaceUsers = @()
 
