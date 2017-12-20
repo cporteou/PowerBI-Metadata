@@ -66,16 +66,24 @@ Description = 'PowerBI API functions to query metadata'
 # NestedModules = @()
 
 # Functions to export from this module
-FunctionsToExport = '*'
+FunctionsToExport = 'Get-AzureTenantID', 
+                    'Get-DatasetRefreshHistory', 
+                    'Get-Datasets', 
+                    'Get-Gateway', 
+                    'Get-PBIAuthTokenPrompt', 
+                    'Get-PBIAuthTokenUnattended', 
+                    'Get-Reports',
+                    'Get-Workspaces',
+                    'Get-WorkspaceUsers',
 
 # Cmdlets to export from this module
-CmdletsToExport = '*'
+CmdletsToExport = @()
 
 # Variables to export from this module
-VariablesToExport = '*'
+# VariablesToExport = '*'
 
 # Aliases to export from this module
-AliasesToExport = '*'
+AliasesToExport = @()
 
 # DSC resources to export from this module
 # DscResourcesToExport = @()
