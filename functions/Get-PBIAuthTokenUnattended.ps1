@@ -2,16 +2,12 @@
 function Get-PBIAuthTokenUnattended{
     <#
 .SYNOPSIS
-Authenticate against the Power BI API
+Authenticate against the Power BI API without a pop-up prompt
 
 .DESCRIPTION
-This is an unattended authentication function. 
-# Prerequisites
-#-------------------------------------------------------------------------------
-# Client ID & Client Secret can be obtained from creating a Power BI app:
-# https://dev.powerbi.com/apps
-# App Type: Web App / API
-#-------------------------------------------------------------------------------
+This is an unattended authentication function. It utilises a saved encrypted text file to store the user's password. This is then passed
+over HTTPS to the API to authenticate. This requires an Azure or Power BI Web App to work.
+
 
 .PARAMETER userName
 This is the user that will connect to Power BI. The datasets & groups that are returned
@@ -33,7 +29,9 @@ This is also generated when the Power BI App is created & must be noted as it is
 irretrievable once you leave the page
 
 .EXAMPLE
-$authtoken = Get-PBIAuthTokenUnattended -userName User@domain.com -tenantID "85b7f285-XXXX-XXXX-XXXX-ec7116aa9ef5" -clientId "f40daa92-XXXX-XXXX-XXXX-7e027fe03e2e" -client_secret "5bM2KeZl2nVXXXXXXXXXXXXi6IYVPOt8lAtPwXXXXXX=""
+Get-PBIAuthTokenUnattended -userName User@domain.com -clientId "f40daa92-XXXX-XXXX-XXXX-7e027fe03e2e" -client_secret "5bM2KeZl2nVXXXXXXXXXXXXi6IYVPOt8lAtPwXXXXXX=
+Get-PBIAuthTokenUnattended -userName User@domain.com -tenantID "85b7f285-XXXX-XXXX-XXXX-ec7116aa9ef5" -clientId "f40daa92-XXXX-XXXX-XXXX-7e027fe03e2e" -client_secret "5bM2KeZl2nVXXXXXXXXXXXXi6IYVPOt8lAtPwXXXXXX=
+
 #>
 
     [CmdletBinding()]
@@ -41,7 +39,7 @@ $authtoken = Get-PBIAuthTokenUnattended -userName User@domain.com -tenantID "85b
     (
         [Parameter(Mandatory=$true)]    
         [string]
-        $userName = "$(Read-Host 'Power BI Account')",
+        $userName,
         
         [string]
         $tenantID,

@@ -37,27 +37,19 @@ function Get-DatasetRefreshHistory{
     [CmdletBinding()]
     Param
     (
-        [Parameter(ParameterSetName='workspaceID')]
-        [Parameter(ParameterSetName='workspaceName')]
         [Parameter(Mandatory=$true)]
         [string]
         $authToken,
-    
-        [Parameter(ParameterSetName='workspaceID')]
+
         [string]
         $workspaceID,
 
-        [Parameter(ParameterSetName='workspaceName')]
         [string]
         $workspaceName,
 
-        [Parameter(ParameterSetName='workspaceID')]
-        [Parameter(ParameterSetName='workspaceName')]
         [string]
         $DatasetID,
         
-        [Parameter(ParameterSetName='workspaceID')]
-        [Parameter(ParameterSetName='workspaceName')]
         [int]
         $TopN = 1
     )
