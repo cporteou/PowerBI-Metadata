@@ -66,8 +66,16 @@ FormatsToProcess = @()
 # NestedModules = @()
 
 # Functions to export from this module
-FunctionsToExport = 
-               'Get-AzureTenantID Get-DatasetRefreshHistory Get-Dataset Get-Gateway Get-PBIAuthTokenPrompt Get-PBIAuthTokenUnattended Get-Report Get-Workspace Get-WorkspaceUser'
+FunctionsToExport = @(
+               'Get-AzureTenantID',
+               'Get-DatasetRefreshHistory',
+               'Get-Dataset',
+               'Get-Gateway', 
+               'Get-PBIAuthTokenPrompt',
+               'Get-PBIAuthTokenUnattended',
+               'Get-Report',
+               'Get-Workspace',
+               'Get-WorkspaceUser')
 
 # Cmdlets to export from this module
 CmdletsToExport = @()
