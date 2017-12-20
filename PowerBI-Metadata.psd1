@@ -66,7 +66,7 @@ Description = 'PowerBI API functions to query metadata'
 # NestedModules = @()
 
 # Functions to export from this module
-FunctionsToExport = 'Get-AzureTenantID', 
+FunctionsToExport = @('Get-AzureTenantID', 
                     'Get-DatasetRefreshHistory', 
                     'Get-Datasets', 
                     'Get-Gateway', 
@@ -74,7 +74,7 @@ FunctionsToExport = 'Get-AzureTenantID',
                     'Get-PBIAuthTokenUnattended', 
                     'Get-Reports',
                     'Get-Workspaces',
-                    'Get-WorkspaceUsers'
+                    'Get-WorkspaceUsers')
 
 # Cmdlets to export from this module
 CmdletsToExport = @()
