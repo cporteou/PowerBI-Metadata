@@ -93,7 +93,7 @@ Get-PBIAuthTokenUnattended -userName User@domain.com -tenantID "85b7f285-XXXX-XX
             $Pass = Get-Content ($path + '\' + $file) | ConvertTo-SecureString
         }
         else{
-            Write-Host 'Encrypted Credential file not found. Creating new file.'
+            Write-Output 'Encrypted Credential file not found. Creating new file.'
 		    Read-Host -Prompt "Please enter Password for $userName" -AsSecureString | ConvertFrom-SecureString | Out-File "$($path)\$($userName)_cred_by_$($user).txt"
             Write-Verbose 'Encrypted file created'
             $Pass = Get-Content ($path + '\' + $file) | ConvertTo-SecureString
