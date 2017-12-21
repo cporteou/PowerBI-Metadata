@@ -2,6 +2,8 @@
 
 This is a collection of Power BI API functions to access Power BI Metadata.
 
+[<img src="https://cporteous.visualstudio.com/_apis/public/build/definitions/6ab8fe89-fdea-4b38-80bd-7daa632d0f9c/1/badge"/>](https://cporteous.visualstudio.com/Power%20BI%20Metadata/_build/index?definitionId=1)
+
 ## Prerequisites
 
 ### Power BI or Azure App
@@ -28,4 +30,20 @@ https://dev.powerbi.com/apps
 
 
 ## Sample Commands
+
+Authenticate to Power BI
+`$auth = Get-PBIAuthTokenPrompt -clientId "f40daa92-XXXX-XXXX-XXXX-7e027fe03e2e"`
+
+Return all Workspaces
+`Get-Workspace -authToken $auth`
+
+Return all datasets for a specific Workspace
+`Get-Dataset -authToken $auth -workspaceName 'Workspace Name'`
+
+Return the last 10 Refresh history for all datasets in Workspace
+`Get-Dataset -authToken $auth -workspaceName 'GBI Dev' | foreach{Get-DatasetRefreshHistory -authToken $auth -workspaceID $_.WorkspaceID -DatasetID $_.id}`
+
+
+
+
 
