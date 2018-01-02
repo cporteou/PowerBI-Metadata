@@ -4,6 +4,7 @@ This is a collection of Power BI API functions to access Power BI Metadata.
 
 [<img src="https://cporteous.visualstudio.com/_apis/public/build/definitions/6ab8fe89-fdea-4b38-80bd-7daa632d0f9c/1/badge"/>](https://cporteous.visualstudio.com/Power%20BI%20Metadata/_build/index?definitionId=1)
 
+PowerShell Gallery Page: https://www.powershellgallery.com/packages/PowerBI-Metadata/0.2.0
 ## Prerequisites
 
 ### Power BI or Azure App
@@ -25,9 +26,11 @@ https://dev.powerbi.com/apps
 **Choose APIs to access** - All APIs should be selected unless you intend to use this app in a restricted environment or use multiple apps for consumption & distribution of data
 
 
-
 *NOTE: First use of an "App" needs to be granted permission from Azure Portal (-> go to Azure Active Directory -> App Registrations -> find your app -> Required Permissions -> Grant Permissions.)*
 
+## Installation
+
+`Install-Module -Name PowerBI-Metadata`
 
 ## Sample Commands
 
