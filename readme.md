@@ -4,7 +4,8 @@ This is a collection of Power BI API functions to access Power BI Metadata.
 
 [<img src="https://cporteous.visualstudio.com/_apis/public/build/definitions/6ab8fe89-fdea-4b38-80bd-7daa632d0f9c/1/badge"/>](https://cporteous.visualstudio.com/Power%20BI%20Metadata/_build/index?definitionId=1)
 
-PowerShell Gallery Page: https://www.powershellgallery.com/packages/PowerBI-Metadata/0.2.0
+PowerShell Gallery Page: https://www.powershellgallery.com/packages/PowerBI-Metadata
+
 ## Prerequisites
 
 ### Power BI or Azure App
