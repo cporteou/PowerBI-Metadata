@@ -26,23 +26,26 @@ General notes
 #>
 function Get-Gateway{
     
-        [CmdletBinding()]
+        [CmdletBinding(DefaultParameterSetName='auth')]
         Param
         (
-            [Parameter(Mandatory=$true)]
+            [Parameter(Mandatory=$true, ParameterSetName='auth')]
+	        [Parameter(Mandatory=$true, ParameterSetName='Name')]
+	        [Parameter(Mandatory=$true, ParameterSetName='ID')]
             [string]
             $authToken,
             
-            
-            [Parameter(ParameterSetName='gatewayName')]
+            [Parameter(ParameterSetName='Name')]
+            [Alias('gatewayName')]
             [string]
-            $gatewayName,
+            $Name,
 
-            [Parameter(ParameterSetName='gatewayID')]
+            [Parameter(ParameterSetName='ID')]
+            [Alias('gatewayID')]
             [string]
-            $gatewayID
+            $ID
         )
-    
+
         Begin{
     
             Write-Verbose 'Building Rest API header with authorization token'
