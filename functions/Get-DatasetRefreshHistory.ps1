@@ -41,9 +41,11 @@ function Get-DatasetRefreshHistory{
         [string]
         $authToken,
 
+        [Alias("id")]
         [string]
         $workspaceID,
 
+        [Alias("name")]
         [string]
         $workspaceName,
 
@@ -51,7 +53,7 @@ function Get-DatasetRefreshHistory{
         $DatasetID,
         
         [int]
-        $TopN = 1
+        $TopN = 20
     )
 
     Begin{
@@ -76,19 +78,17 @@ function Get-DatasetRefreshHistory{
                     Write-Verbose 'Workspace Name provided. Matching to ID & building API call'
                     $workspace = Get-Workspace -authToken $authToken -workspaceName $workspaceName
                     $workspaceID = $workspace.id
-                    # Need to escape the $top={N} usage in the API call
-                    $uri = "https://api.powerbi.com/v1.0/myorg/groups/$($workspaceID)/datasets/$($datasetID)/refreshes/?`$top=$($TopN)"
+                    $uri = "https://api.powerbi.com/v1.0/myorg/groups/$($workspaceID)/datasets/$($datasetID)/refreshes"
                 }
                 elseif($workspaceID){
                     Write-Verbose 'Workspace ID provided. Building API call'
-                    # Need to escape the $top={N} usage in the API call
-                    $uri = "https://api.powerbi.com/v1.0/myorg/groups/$($workspaceID)/datasets/$($datasetID)/refreshes/?`$top=$($TopN)"
+                    $uri = "https://api.powerbi.com/v1.0/myorg/groups/$($workspaceID)/datasets/$($datasetID)/refreshes"
                 }
                 else{
                     Write-Warning "Unable to Proceed: No Workspace info provided for Dataset"
                     throw
                 }
-
+                
                 Write-Verbose 'Returning refresh history for specified dataset ID'
                 $refreshes = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
 
