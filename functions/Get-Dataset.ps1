@@ -80,7 +80,7 @@ function Get-Dataset{
                     $workspaceDatasets = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
 
                     $workspaceDatasets.value | Add-Member -NotePropertyName "WorkspaceID" -NotePropertyValue $Workspace.id
-                    # $workspaceDatasets.value
+                    
                     $datasets += $workspaceDatasets
                     
                 }
@@ -88,7 +88,7 @@ function Get-Dataset{
             
         }
         catch [System.Net.WebException]{
-            Write-Error "Permissions not valid to get dataset info on $($uri). Continuing."
+            Write-Warning "Permissions not valid to get dataset info on $($uri). Continuing."
         }
         catch {            
             Write-Error "Error calling REST API on $($uri): $($_.Exception)"            
