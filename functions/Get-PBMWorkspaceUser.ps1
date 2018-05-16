@@ -16,14 +16,14 @@ Optional parameter to restrict data to a specific Workspace ID
 Optional parameter to restrict data to a specific Workspace Name. The Workspace ID is retrieved using this name by the function
 
 .EXAMPLE
-Get-WorkspaceUser -authToken $auth
-Get-WorkspaceUser -authToken $auth -workspaceID 1530055f-XXXX-XXXX-XXXX-ee8c87e4a648
-Get-WorkspaceUser -authToken $auth -workspaceName 'Workspace Name'
+Get-PBMWorkspaceUser -authToken $auth
+Get-PBMWorkspaceUser -authToken $auth -workspaceID 1530055f-XXXX-XXXX-XXXX-ee8c87e4a648
+Get-PBMWorkspaceUser -authToken $auth -workspaceName 'Workspace Name'
 
 .NOTES
 General notes
 #>
-function Get-WorkspaceUser{
+function Get-PBMWorkspaceUser{
     
     [CmdletBinding()]
     Param
@@ -60,7 +60,7 @@ function Get-WorkspaceUser{
             elseif ($workspaceName) {
                 
                 Write-Verbose 'Workspace Name provided. Matching to ID & building API call'
-                $workspace = Get-Workspace -authToken $authToken -workspaceName $workspaceName
+                $workspace = Get-PBMWorkspace -authToken $authToken -workspaceName $workspaceName
 
                 Write-Verbose 'Returning Users for specified Workspace'
                 $uri = "https://api.powerbi.com/v1.0/myorg/groups/$($workspace.id)/users"
@@ -70,7 +70,7 @@ function Get-WorkspaceUser{
             }
             else {
                 Write-Verbose 'Fetching all Workspaces'
-                $workspaces = Get-Workspace -authToken $authToken 
+                $workspaces = Get-PBMWorkspace -authToken $authToken 
 
                 $workspaceUsers = @()
 

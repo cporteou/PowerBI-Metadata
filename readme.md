@@ -39,13 +39,13 @@ Authenticate to Power BI
 `$auth = Get-PBIAuthTokenPrompt -clientId "f40daa92-XXXX-XXXX-XXXX-7e027fe03e2e"`
 
 Return all Workspaces
-`Get-Workspace -authToken $auth`
+`Get-PBMWorkspace -authToken $auth`
 
 Return all datasets for a specific Workspace
-`Get-Dataset -authToken $auth -workspaceName 'Workspace Name'`
+`Get-PBMDataset -authToken $auth -workspaceName 'Workspace Name'`
 
 Return the last 10 Refresh history for all datasets in Workspace
-`Get-Dataset -authToken $auth -workspaceName 'GBI Dev' | foreach{Get-DatasetRefreshHistory -authToken $auth -workspaceID $_.WorkspaceID -DatasetID $_.id}`
+`Get-PBMDataset -authToken $auth -workspaceName 'GBI Dev' | foreach{Get-PBMDatasetRefreshHistory -authToken $auth -workspaceID $_.WorkspaceID -DatasetID $_.id}`
 
 
 

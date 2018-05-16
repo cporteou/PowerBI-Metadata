@@ -24,15 +24,15 @@ Optional parameter to return the top [Number] of refresh records for the dataset
 no Dataset ID or Workspace is provided
 
 .EXAMPLE
-Get-DatasetRefreshHistory -authToken $auth -workspaceID 1530055f-XXXX-XXXX-XXXX-ee8c87e4a648 
-Get-DatasetRefreshHistory -authToken $auth -workspaceName 'Workspace Name'
-Get-DatasetRefreshHistory -authToken $auth -workspaceID 1530055f-XXXX-XXXX-XXXX-ee8c87e4a648  -DatasetID ffac73aa-XXXX-XXXX-XXXX-643f36b11a68
-Get-DatasetRefreshHistory -authToken $auth -workspaceName 'Workspace Name' -DatasetID ffac73aa-XXXX-XXXX-XXXX-643f36b11a68
+Get-PBMDatasetRefreshHistory -authToken $auth -workspaceID 1530055f-XXXX-XXXX-XXXX-ee8c87e4a648 
+Get-PBMDatasetRefreshHistory -authToken $auth -workspaceName 'Workspace Name'
+Get-PBMDatasetRefreshHistory -authToken $auth -workspaceID 1530055f-XXXX-XXXX-XXXX-ee8c87e4a648  -DatasetID ffac73aa-XXXX-XXXX-XXXX-643f36b11a68
+Get-PBMDatasetRefreshHistory -authToken $auth -workspaceName 'Workspace Name' -DatasetID ffac73aa-XXXX-XXXX-XXXX-643f36b11a68
 
 .NOTES
 General notes
 #>
-function Get-DatasetRefreshHistory{
+function Get-PBMDatasetRefreshHistory{
     
     [CmdletBinding()]
     Param
@@ -76,7 +76,7 @@ function Get-DatasetRefreshHistory{
                 Write-Verbose 'Specific Dataset ID Provided'
                 if($workspaceName){                    
                     Write-Verbose 'Workspace Name provided. Matching to ID & building API call'
-                    $workspace = Get-Workspace -authToken $authToken -workspaceName $workspaceName
+                    $workspace = Get-PBMWorkspace -authToken $authToken -workspaceName $workspaceName
                     $workspaceID = $workspace.id
                     $uri = "https://api.powerbi.com/v1.0/myorg/groups/$($workspaceID)/datasets/$($datasetID)/refreshes"
                 }
@@ -99,15 +99,15 @@ function Get-DatasetRefreshHistory{
                 Write-Verbose 'No Dataset ID Provided. Returning refresh data for all Datasets'               
                 if($workspaceID){                    
                     Write-Verbose 'Returning datasets for specified Workspace'
-                    $datasets = Get-Dataset -authToken $authToken -workspaceID $workspaceID
+                    $datasets = Get-PBMDataset -authToken $authToken -workspaceID $workspaceID
                 }
                 elseif ($workspaceName) {
                     Write-Verbose 'Returning datasets for specified Workspace'
-                    $datasets = Get-Dataset -authToken $authToken -workspaceName $workspaceName
+                    $datasets = Get-PBMDataset -authToken $authToken -workspaceName $workspaceName
                 }
                 else {
                     Write-Verbose 'Returning datasets for ALL Workspace'
-                    $datasets = Get-Dataset -authToken $authToken
+                    $datasets = Get-PBMDataset -authToken $authToken
                 }
                 
                 $refreshes = @()

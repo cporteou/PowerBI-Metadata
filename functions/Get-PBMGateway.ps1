@@ -17,14 +17,14 @@ Optional parameter to restrict data to a specific Gateway Name. The Gateway ID i
 Optional parameter to restrict data to a specific Gateway
 
 .EXAMPLE
-Get-Gateway -authToken $auth 
-Get-Gateway -authToken $auth -GatewayName 'Gateway-Name'
-Get-Gateway -authToken $auth -GatewayID '3d9355d4-XXXX-XXXX-XXXX-39cb67305ede'
+Get-PBMGateway -authToken $auth 
+Get-PBMGateway -authToken $auth -GatewayName 'Gateway-Name'
+Get-PBMGateway -authToken $auth -GatewayID '3d9355d4-XXXX-XXXX-XXXX-39cb67305ede'
 
 .NOTES
 General notes
 #>
-function Get-Gateway{
+function Get-PBMGateway{
     
         [CmdletBinding(DefaultParameterSetName='auth')]
         Param
