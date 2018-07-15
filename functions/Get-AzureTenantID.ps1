@@ -20,7 +20,7 @@ Get-AzureTenantID -Email 'Craig@craigporteous.com'
 .NOTES
 
 #>
-function Get-AzureTenantID{
+function Get-AzureTenantID {
 
     [CmdletBinding(DefaultParameterSetName = 'Domain')]
     param
@@ -48,4 +48,3 @@ function Get-AzureTenantID{
         }
     }
 }
-
