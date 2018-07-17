@@ -1,5 +1,5 @@
 
-function Get-PBIAuthTokenUnattended{
+function Get-PBIAuthTokenUnattended {
     <#
 .SYNOPSIS
 Authenticate against the Power BI API without a pop-up prompt
@@ -37,26 +37,25 @@ Get-PBIAuthTokenUnattended -userName User@domain.com -tenantID "85b7f285-XXXX-XX
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory=$true)]    
+        [Parameter(Mandatory)]
         [string]
         $userName,
-        
-        [string]
-        $tenantID,
-        
-        [Parameter(Mandatory=$true)]  
+
+        [Parameter(Mandatory)]
         [string]
         $clientId,
-        
-        [Parameter(Mandatory=$true)]  
+
+        [Parameter(Mandatory)]
         [string]
-        $client_secret
+        $client_secret,
+
+        [string]
+        $tenantID
     )
 
     begin {
 
-        if($tenantID.Length -lt 36)
-        {
+        if ($tenantID.Length -lt 36) {
             Write-Verbose "Retrieving Tenant ID for $($userName)"
             $tenantID = Get-AzureTenantID -Email $userName
         }
@@ -65,65 +64,60 @@ Get-PBIAuthTokenUnattended -userName User@domain.com -tenantID "85b7f285-XXXX-XX
         $pbiResourceUrl = "https://analysis.windows.net/powerbi/api"
 
         Write-Verbose 'Test if ADAL module is installed & install if DLL not found'
-        $moduleName = 'Microsoft.ADAL.PowerShell'        
-        Try
-        {
-            if (Get-Module -ListAvailable -Name $moduleName)
-            {
+        $moduleName = 'Microsoft.ADAL.PowerShell'
+        Try {
+            if (Get-Module -ListAvailable -Name $moduleName) {
                 Import-Module -Name $moduleName -ErrorAction SilentlyContinue
-            }        
-            else
-            {
+            }
+            else {
                 Install-Module -Name $moduleName -ErrorAction SilentlyContinue
             }
         }
-        Catch
-        {
+        Catch {
             throw '$moduleName module is not installed and could not be added'
         }
 
-        Write-Verbose 'Get Username from encrypted text file'    
+        Write-Verbose 'Get Username from encrypted text file'
         $path = (Resolve-Path .\).Path
-        #Grab current user as encrypted file is tagged with who encrypted it	
-        $user = $env:UserName	
+        #Grab current user as encrypted file is tagged with who encrypted it
+        $user = $env:UserName
         $file = ($userName + "_cred_by_$($user).txt")
         Write-Verbose 'Testing if credential file exists & create if not'
-        if(Test-Path $file)
-        {
+        if (Test-Path $file) {
             $Pass = Get-Content ($path + '\' + $file) | ConvertTo-SecureString
         }
-        else{
+        else {
             Write-Information 'Encrypted Credential file not found. Creating new file.'
-		    Read-Host -Prompt "Please enter Password for $userName" -AsSecureString | ConvertFrom-SecureString | Out-File "$($path)\$($userName)_cred_by_$($user).txt"
+            Read-Host -Prompt "Please enter Password for $userName" -AsSecureString | ConvertFrom-SecureString | Out-File "$($path)\$($userName)_cred_by_$($user).txt"
             Write-Verbose 'Encrypted file created'
             $Pass = Get-Content ($path + '\' + $file) | ConvertTo-SecureString
         }
     }
-    Process{
-        
+    Process {
+
         try {
             #Pull password from secure string
             $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($Pass)
             $textPass = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
-            
+
             Write-Verbose 'Authenticating to Azure/PBI'
             $authBody = @{
-                    'resource'=$pbiResourceUrl
-                    'client_id'=$clientId        
-                    'grant_type'="password"
-                    'username'=$userName
-                    'password'= $textPass
-                    'scope'="openid"
-                    'client_secret'=$client_secret
-                }
+                'resource'      = $pbiResourceUrl
+                'client_id'     = $clientId
+                'grant_type'    = "password"
+                'username'      = $userName
+                'password'      = $textPass
+                'scope'         = "openid"
+                'client_secret' = $client_secret
+            }
             #Clear password variable immediately after use
-            $textPass = $null            
+            $textPass = $null
             $auth = Invoke-RestMethod -Uri $pbiAuthorityUrl -Body $authBody -Method POST -Verbose
             #Clear auth array immediately after use
-            $authBody = $null            
+            $authBody = $null
         }
         catch {
-            throw "Authentication or Connection failure: $($_.Exception.Message)"            
+            throw "Authentication or Connection failure: $($_.Exception.Message)"
         }
         Write-Verbose 'Authentication token retrieved'
         return $auth.access_token

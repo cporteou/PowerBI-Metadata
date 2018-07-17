@@ -1,11 +1,11 @@
 <#
 .SYNOPSIS
 Authenticate against the Power BI API using a "Native" app type which prompts for login
-credentials. This function provides an auth token that can be added to an Auth header 
+credentials. This function provides an auth token that can be added to an Auth header
 when making an API call.
 
 .DESCRIPTION
-This is an authentication function. 
+This is an authentication function.
 # Prerequisites
 #-------------------------------------------------------------------------------
 # Client ID can be obtained from creating a Power BI app:
@@ -25,20 +25,19 @@ Flag to force Azure to prompt for credentials. This allows you to change user. F
 still prompt if flag is not set due to current user not being authenticated
 
 .EXAMPLE
-$authtoken = Get-PBIAuthTokenPrompt -clientId "f40daa92-XXXX-XXXX-XXXX-7e027fe03e2e"
-$authtoken = Get-PBIAuthTokenPrompt -clientId "f40daa92-XXXX-XXXX-XXXX-7e027fe03e2e" -Prompt
+$authtoken = Get-PBIAuthTokenPrompt -clientId "f40daa92-XXXX-XXXX-XXXX-7e027fe03e2e" -redirectUrl "https://URL-set-in-app.com"
+$authtoken = Get-PBIAuthTokenPrompt -clientId "f40daa92-XXXX-XXXX-XXXX-7e027fe03e2e" -redirectUrl "https://URL-set-in-app.com" -Prompt
 #>
-function Get-PBIAuthTokenPrompt
-{
+function Get-PBIAuthTokenPrompt {
 
     [CmdletBinding()]
     param
-    (        
-        [Parameter(Mandatory=$true)]  
+    (
+        [Parameter(Mandatory)]
         [string]
         $clientId,
 
-        [Parameter(Mandatory=$true)]  
+        [Parameter(Mandatory)]
         [string]
         $redirectUrl,
 
@@ -47,34 +46,30 @@ function Get-PBIAuthTokenPrompt
     )
 
     begin {
-        $resourceAppIdURI = "https://analysis.windows.net/powerbi/api"        
+        $resourceAppIdURI = "https://analysis.windows.net/powerbi/api"
         $authority = "https://login.windows.net/common/oauth2/authorize"
-        
+
         Write-Verbose 'Test if ADAL module is installed & install if not found'
-        $moduleName = 'Microsoft.ADAL.PowerShell'        
-        Try
-        {
-            if (Get-Module -ListAvailable -Name $moduleName)
-            {
+        $moduleName = 'Microsoft.ADAL.PowerShell'
+        Try {
+            if (Get-Module -ListAvailable -Name $moduleName) {
                 Import-Module -Name $moduleName -ErrorAction SilentlyContinue
-            }        
-            else
-            {
+            }
+            else {
                 Install-Module -Name $moduleName -ErrorAction SilentlyContinue
             }
         }
-        Catch
-        {
+        Catch {
             throw "$($moduleName) module is not installed and could not be added"
         }
-        
+
     }
-    Process{
-        
-        try {       
+    Process {
+
+        try {
             $authContext = New-Object "Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext" -ArgumentList $authority
-        
-            if($prompt){
+
+            if ($prompt) {
                 Write-Verbose 'Authentication will prompt for credentials'
                 $promptBehaviour = 'Always'
             }
@@ -86,7 +81,7 @@ function Get-PBIAuthTokenPrompt
             $auth = $authContext.AcquireToken($resourceAppIdURI, $clientId, $redirectUrl, $promptBehaviour)
         }
         catch {
-            throw "Authentication or Connection failure: $_.Exception.Message"            
+            throw "Authentication or Connection failure: $_.Exception.Message"
         }
         return $auth.AccessToken
     }

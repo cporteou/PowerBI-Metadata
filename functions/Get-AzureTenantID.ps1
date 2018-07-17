@@ -3,7 +3,7 @@
 This function returns the Azure Tenant ID for a provided domain
 
 .DESCRIPTION
-This function queries Azure anonymously to return the provided domain's 
+This function queries Azure anonymously to return the provided domain's
 tenant ID. The function can take a valid user email for that domain or
 the domain name itself.
 
@@ -20,35 +20,35 @@ Get-AzureTenantID -Email 'Craig@craigporteous.com'
 .NOTES
 
 #>
-function Get-AzureTenantID{
+function Get-AzureTenantID {
 
     [CmdletBinding()]
     param
-    (         
+    (
         [string]
         $Domain,
- 
+
         [string]
         $Email
     )
 
-    Process{
+    Process {
         try {
-            if($Domain){
+            if ($Domain) {
                 Write-Verbose 'Domain provided.'
             }
             elseif ($Email) {
                 Write-Verbose 'Split the string on the username to get the Domain.'
-                $Domain = $Email.Split("@")[1]    
+                $Domain = $Email.Split("@")[1]
             }
-            else{
+            else {
                 throw
                 Write-Warning 'You must provide a valid Domain or User email to proceed.'
             }
-            
+
             Write-Verbose 'Query Azure anonymously (this may not work for ALL tenant domains. Eg. Those that use .onmicrosoft.com)'
             $tenantID = (Invoke-WebRequest -UseBasicParsing https://login.windows.net/$($Domain)/.well-known/openid-configuration|ConvertFrom-Json).token_endpoint.Split('/')[3]
-        
+
         }
         catch {
             throw $_

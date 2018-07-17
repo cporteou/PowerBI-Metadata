@@ -4,7 +4,7 @@
 Returns information about the tenant's On Premises Data Gateway(s)
 
 .DESCRIPTION
-This will return information such as status, hosting server etc for the specified data gateway or ALL data gateways if the Gateway 
+This will return information such as status, hosting server etc for the specified data gateway or ALL data gateways if the Gateway
 parameters are not provided.
 
 .PARAMETER authToken
@@ -17,88 +17,88 @@ Optional parameter to restrict data to a specific Gateway Name. The Gateway ID i
 Optional parameter to restrict data to a specific Gateway
 
 .EXAMPLE
-Get-PBMGateway -authToken $auth 
+Get-PBMGateway -authToken $auth
 Get-PBMGateway -authToken $auth -GatewayName 'Gateway-Name'
 Get-PBMGateway -authToken $auth -GatewayID '3d9355d4-XXXX-XXXX-XXXX-39cb67305ede'
 
 .NOTES
 General notes
 #>
-function Get-PBMGateway{
-    
-        [CmdletBinding(DefaultParameterSetName='auth')]
-        Param
-        (
-            [Parameter(Mandatory=$true, ParameterSetName='auth')]
-	        [Parameter(Mandatory=$true, ParameterSetName='Name')]
-	        [Parameter(Mandatory=$true, ParameterSetName='ID')]
-            [string]
-            $authToken,
-            
-            [Parameter(ParameterSetName='Name')]
-            [Alias('gatewayName')]
-            [string]
-            $Name,
+function Get-PBMGateway {
 
-            [Parameter(ParameterSetName='ID')]
-            [Alias('gatewayID')]
-            [string]
-            $ID
-        )
+    [CmdletBinding(DefaultParameterSetName = 'auth')]
+    Param
+    (
+        [Parameter(Mandatory = $true, ParameterSetName = 'auth')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Name')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ID')]
+        [string]
+        $authToken,
 
-        Begin{
-    
-            Write-Verbose 'Building Rest API header with authorization token'
-            $authHeader = @{
-                'Content-Type'='application/json'
-                'Authorization'='Bearer ' + $authToken
-            }
-        }
-        Process{
-    
-            try {
-                
-                if($gatewayName){
-                    Write-Verbose 'Gateway Name provided. Fetching all Gateways'
-                    $uri = "https://api.powerbi.com/v1.0/myorg/gateways"
-                    $gateways = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
-    
-                    Write-Verbose 'Matching Gateway Name to ID'
-                    $gatewayInfo = $gateways.value | Where-Object{$_.name -eq $gatewayName}
-                    #Another step is needed as this method does not provide gateway Status
-                    Write-Verbose 'Gateway ID provided. Fetching info'
-                    $uri = "https://api.powerbi.com/v1.0/myorg/gateways/$($gatewayinfo.id)"
-                    $gateway = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
-                }
-                elseif($gatewayID){
-                    Write-Verbose 'Gateway ID provided. Fetching info'
-                    $uri = "https://api.powerbi.com/v1.0/myorg/gateways/$($gatewayID)"
-                    $gateway = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
-                }
-                else{
-                    Write-Verbose 'No Gateway provided. Returning all Gateway info'
-                    $uri = "https://api.powerbi.com/v1.0/myorg/gateways"
-                
-                    $gateways = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
+        [Parameter(ParameterSetName = 'Name')]
+        [Alias('gatewayName')]
+        [string]
+        $Name,
 
-                    $gateway = @()
+        [Parameter(ParameterSetName = 'ID')]
+        [Alias('gatewayID')]
+        [string]
+        $ID
+    )
 
-                    foreach($gatewayInfo in $gateways.value){
-                        Write-Verbose "Gateway ID provided. Fetching info for $($gatewayinfo.name)"
-                        $uri = "https://api.powerbi.com/v1.0/myorg/gateways/$($gatewayInfo.id)"
-                        $gw = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
+    Begin {
 
-                        $gateway += $gw
-                    }
-                }
-            }
-            catch {
-                Write-Error "Error retrieving Gateways from API: $($_.Exception.Message)"
-            }
-            
-        }
-        End{    
-            Write-Verbose 'Returning Gateway info'
-            return $gateway    
+        Write-Verbose 'Building Rest API header with authorization token'
+        $authHeader = @{
+            'Content-Type'  = 'application/json'
+            'Authorization' = 'Bearer ' + $authToken
         }
     }
+    Process {
+
+        try {
+
+            if ($gatewayName) {
+                Write-Verbose 'Gateway Name provided. Fetching all Gateways'
+                $uri = "https://api.powerbi.com/v1.0/myorg/gateways"
+                $gateways = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
+
+                Write-Verbose 'Matching Gateway Name to ID'
+                $gatewayInfo = $gateways.value | Where-Object {$_.name -eq $gatewayName}
+                #Another step is needed as this method does not provide gateway Status
+                Write-Verbose 'Gateway ID provided. Fetching info'
+                $uri = "https://api.powerbi.com/v1.0/myorg/gateways/$($gatewayinfo.id)"
+                $gateway = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
+            }
+            elseif ($gatewayID) {
+                Write-Verbose 'Gateway ID provided. Fetching info'
+                $uri = "https://api.powerbi.com/v1.0/myorg/gateways/$($gatewayID)"
+                $gateway = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
+            }
+            else {
+                Write-Verbose 'No Gateway provided. Returning all Gateway info'
+                $uri = "https://api.powerbi.com/v1.0/myorg/gateways"
+
+                $gateways = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
+
+                $gateway = @()
+
+                foreach ($gatewayInfo in $gateways.value) {
+                    Write-Verbose "Gateway ID provided. Fetching info for $($gatewayinfo.name)"
+                    $uri = "https://api.powerbi.com/v1.0/myorg/gateways/$($gatewayInfo.id)"
+                    $gw = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
+
+                    $gateway += $gw
+                }
+            }
+        }
+        catch {
+            Write-Error "Error retrieving Gateways from API: $($_.Exception.Message)"
+        }
+
+    }
+    End {
+        Write-Verbose 'Returning Gateway info'
+        return $gateway
+    }
+}
