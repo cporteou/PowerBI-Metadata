@@ -5,7 +5,7 @@ if ($packages.Name  -contains "PSScriptAnalyzer") {
     Write-Output "Installing latest version of PSScriptAnalyzer"
 
     #install PSScriptAnalyzer
-    Install-Package PSScriptAnalyzer -Force -Scope CurrentUser 
+    Install-Package PSScriptAnalyzer -Force -Scope CurrentUser
 }
 $script:ModuleName = 'PowerBI-Metadata'
 # Removes all versions of the module from the session before importing
@@ -22,7 +22,7 @@ Describe "PSScriptAnalyzer rule-sets" -Tag Build , ScriptAnalyzer {
     $Rules = Get-ScriptAnalyzerRule
     $scripts = Get-ChildItem $ModuleBase -Include *.ps1, *.psm1, *.psd1 -Recurse | Where-Object fullname -notmatch 'classes'
 
-    foreach ( $Script in $scripts ) 
+    foreach ( $Script in $scripts )
     {
         Context "Script '$($script.FullName)'" {
 

@@ -16,22 +16,22 @@ Optional parameter to restrict data to a specific Workspace ID
 Optional parameter to restrict data to a specific Workspace Name. The Workspace ID is retrieved using this name by the function
 
 .EXAMPLE
-Get-PBMReport -authToken $auth 
+Get-PBMReport -authToken $auth
 Get-PBMReport -authToken $auth -workspaceID 1530055f-XXXX-XXXX-XXXX-ee8c87e4a648
 Get-PBMReport -authToken $auth -workspaceName 'Workspace Name'
 
 .NOTES
 General notes
 #>
-function Get-PBMReport{
-    
+function Get-PBMReport {
+
     [CmdletBinding()]
     Param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]
         $authToken,
-    
+
         [string]
         $workspaceID,
 
@@ -39,18 +39,18 @@ function Get-PBMReport{
         $workspaceName
     )
 
-    Begin{
+    Begin {
 
         Write-Verbose 'Building Rest API header with authorization token'
         $authHeader = @{
-            'Content-Type'='application/json'
-            'Authorization'='Bearer ' + $authToken
+            'Content-Type'  = 'application/json'
+            'Authorization' = 'Bearer ' + $authToken
         }
     }
-    Process{
+    Process {
 
         try {
-            if($workspaceID){                    
+            if ($workspaceID) {
                 Write-Verbose 'Returning reports for specified Workspace'
                 $uri = "https://api.powerbi.com/v1.0/myorg/groups/$($WorkspaceID)/reports"
 
@@ -58,26 +58,25 @@ function Get-PBMReport{
                 $reports.value | Add-Member -NotePropertyName "WorkspaceID" -NotePropertyValue $WorkspaceID
             }
             elseif ($workspaceName) {
-                
+
                 Write-Verbose 'Workspace Name provided. Matching to ID & building API call'
                 $workspace = Get-PBMWorkspace -authToken $authToken -workspaceName $workspaceName
 
                 Write-Verbose 'Returning reports for specified Workspace'
                 $uri = "https://api.powerbi.com/v1.0/myorg/groups/$($Workspace.id)/reports"
-                
+
                 $reports = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
                 $reports.value | Add-Member -NotePropertyName "WorkspaceID" -NotePropertyValue $Workspace.id
             }
             else {
                 Write-Verbose 'Fetching all Workspaces'
                 $uri = "https://api.powerbi.com/v1.0/myorg/groups"
-                $workspaces = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET 
+                $workspaces = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
 
                 $reports = @()
 
                 Write-Verbose 'Returning reports for all Workspaces'
-                foreach($workspace in $workspaces.value)
-                {
+                foreach ($workspace in $workspaces.value) {
                     $WorkspaceID = $workspace.id
 
                     $uri = "https://api.powerbi.com/v1.0/myorg/groups/$($WorkspaceID)/reports"
@@ -86,17 +85,17 @@ function Get-PBMReport{
                     $workspaceReports.value | Add-Member -NotePropertyName "WorkspaceID" -NotePropertyValue $WorkspaceID
 
                     $reports += $workspaceReports
-                    
+
                 }
-            }               
-            
+            }
+
         }
         catch {
             Write-Error "Error calling REST API: $($_.Exception.Message)"
         }
     }
-    End{    
-        
+    End {
+
         return $reports.Value
 
     }

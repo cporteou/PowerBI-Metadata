@@ -36,6 +36,7 @@ function Get-AzureTenantID {
     )
 
     Process {
+
         if ($Email) {
             Write-Verbose 'Email address passed. Extract the domain.'
             $Domain = $Email.Split("@")[1]

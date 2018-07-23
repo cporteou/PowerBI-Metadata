@@ -20,11 +20,11 @@ Optional parameter to restrict data to a specific Workspace Name. The Workspace 
 Optional parameter to only return refresh data for specified dataset ID
 
 .PARAMETER TopN
-Optional parameter to return the top [Number] of refresh records for the dataset. This is forced to the Top 1 (last refresh) when 
+Optional parameter to return the top [Number] of refresh records for the dataset. This is forced to the Top 1 (last refresh) when
 no Dataset ID or Workspace is provided
 
 .EXAMPLE
-Get-PBMDatasetRefreshHistory -authToken $auth -workspaceID 1530055f-XXXX-XXXX-XXXX-ee8c87e4a648 
+Get-PBMDatasetRefreshHistory -authToken $auth -workspaceID 1530055f-XXXX-XXXX-XXXX-ee8c87e4a648
 Get-PBMDatasetRefreshHistory -authToken $auth -workspaceName 'Workspace Name'
 Get-PBMDatasetRefreshHistory -authToken $auth -workspaceID 1530055f-XXXX-XXXX-XXXX-ee8c87e4a648  -DatasetID ffac73aa-XXXX-XXXX-XXXX-643f36b11a68
 Get-PBMDatasetRefreshHistory -authToken $auth -workspaceName 'Workspace Name' -DatasetID ffac73aa-XXXX-XXXX-XXXX-643f36b11a68
@@ -32,12 +32,12 @@ Get-PBMDatasetRefreshHistory -authToken $auth -workspaceName 'Workspace Name' -D
 .NOTES
 General notes
 #>
-function Get-PBMDatasetRefreshHistory{
-    
+function Get-PBMDatasetRefreshHistory {
+
     [CmdletBinding()]
     Param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]
         $authToken,
 
@@ -51,53 +51,53 @@ function Get-PBMDatasetRefreshHistory{
 
         [string]
         $DatasetID,
-        
+
         [int]
         $TopN = 20
     )
 
-    Begin{
+    Begin {
 
         Write-Verbose 'Building Rest API header with authorization token'
         $authHeader = @{
-            'Content-Type'='application/json'
-            'Authorization'='Bearer ' + $authToken
+            'Content-Type'  = 'application/json'
+            'Authorization' = 'Bearer ' + $authToken
         }
     }
-    Process{
+    Process {
 
-        if(!$workspaceID -and !$workspaceName -and !$DatasetID){
+        if (!$workspaceID -and !$workspaceName -and !$DatasetID) {
             Write-Verbose 'Limiting refresh data to top 1 record as no Workspace or Dataset provided. ALL will be returned'
             $TopN = 1
         }
 
         try {
-            if($DatasetID){
+            if ($DatasetID) {
                 Write-Verbose 'Specific Dataset ID Provided'
-                if($workspaceName){                    
+                if ($workspaceName) {
                     Write-Verbose 'Workspace Name provided. Matching to ID & building API call'
                     $workspace = Get-PBMWorkspace -authToken $authToken -workspaceName $workspaceName
                     $workspaceID = $workspace.id
                     $uri = "https://api.powerbi.com/v1.0/myorg/groups/$($workspaceID)/datasets/$($datasetID)/refreshes"
                 }
-                elseif($workspaceID){
+                elseif ($workspaceID) {
                     Write-Verbose 'Workspace ID provided. Building API call'
                     $uri = "https://api.powerbi.com/v1.0/myorg/groups/$($workspaceID)/datasets/$($datasetID)/refreshes"
                 }
-                else{
+                else {
                     Write-Warning "Unable to Proceed: No Workspace info provided for Dataset"
                     throw
                 }
-                
+
                 Write-Verbose 'Returning refresh history for specified dataset ID'
                 $refreshes = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
 
-                $refreshes.value | Add-Member -NotePropertyName "DatasetID" -NotePropertyValue $datasetID 
+                $refreshes.value | Add-Member -NotePropertyName "DatasetID" -NotePropertyValue $datasetID
                 $refreshes.value | Add-Member -NotePropertyName "WorkspaceID" -NotePropertyValue $workspaceID
             }
-            else { 
-                Write-Verbose 'No Dataset ID Provided. Returning refresh data for all Datasets'               
-                if($workspaceID){                    
+            else {
+                Write-Verbose 'No Dataset ID Provided. Returning refresh data for all Datasets'
+                if ($workspaceID) {
                     Write-Verbose 'Returning datasets for specified Workspace'
                     $datasets = Get-PBMDataset -authToken $authToken -workspaceID $workspaceID
                 }
@@ -109,20 +109,19 @@ function Get-PBMDatasetRefreshHistory{
                     Write-Verbose 'Returning datasets for ALL Workspace'
                     $datasets = Get-PBMDataset -authToken $authToken
                 }
-                
+
                 $refreshes = @()
 
-                foreach($dataset in $datasets){
+                foreach ($dataset in $datasets) {
 
-                    if($dataset.isRefreshable -eq $true) #We can only return refresh info on datasets that can be refreshed
-                    {
+                    if ($dataset.isRefreshable -eq $true) { #We can only return refresh info on datasets that can be refreshed
                         Write-Verbose "Returning refresh history for dataset: $($dataset.name)"
                         # Need to escape the $top={N} usage in the API call
                         $uri = "https://api.powerbi.com/v1.0/myorg/groups/$($dataset.WorkspaceID)/datasets/$($dataset.id)/refreshes/?`$top=$($TopN)"
-                        
+
                         $refresh = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
-                        
-                        $refresh.value | Add-Member -NotePropertyName "DatasetID" -NotePropertyValue $dataset.id 
+
+                        $refresh.value | Add-Member -NotePropertyName "DatasetID" -NotePropertyValue $dataset.id
                         $refresh.value | Add-Member -NotePropertyName "WorkspaceID" -NotePropertyValue $dataset.WorkspaceID
                         $refreshes += $refresh
                     }
@@ -134,8 +133,8 @@ function Get-PBMDatasetRefreshHistory{
             Write-Error "Error calling REST API: $($_.Exception.Message)"
         }
     }
-    End{    
-        
+    End {
+
         return $refreshes.Value
 
     }

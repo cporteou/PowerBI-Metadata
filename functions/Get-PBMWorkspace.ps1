@@ -4,7 +4,7 @@
 Returns Power BI Workspace info.
 
 .DESCRIPTION
-This command returns the Workspace information for all Workspaces or for a specific workspace if the workspaceName parameter is 
+This command returns the Workspace information for all Workspaces or for a specific workspace if the workspaceName parameter is
 provided. This command is used within other commands to retrieve Workspace ID where a Workspace Name is provided.
 
 .PARAMETER authToken
@@ -20,42 +20,42 @@ Get-PBMWorkspace -authToken $auth -workspaceName 'Workspace Name'
 .NOTES
 General notes
 #>
-function Get-PBMWorkspace{
+function Get-PBMWorkspace {
 
     [CmdletBinding()]
     Param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]
         $authToken,
-        
+
         [string]
         $workspaceName
     )
 
-    Begin{
+    Begin {
 
         Write-Verbose 'Building Rest API header with authorization token'
         $authHeader = @{
-            'Content-Type'='application/json'
-            'Authorization'='Bearer ' + $authToken
+            'Content-Type'  = 'application/json'
+            'Authorization' = 'Bearer ' + $authToken
         }
     }
-    Process{
+    Process {
 
         try {
-            
-            if($workspaceName){
+
+            if ($workspaceName) {
                 Write-Verbose 'Workspace Name provided. Fetching all Workspaces'
                 $uri = "https://api.powerbi.com/v1.0/myorg/groups"
                 $workspace = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
 
                 Write-Verbose 'Matching Workspace Name to ID'
-                $workspaces = $workspace.value | Where-Object{$_.name -eq $workspaceName}
+                $workspaces = $workspace.value | Where-Object {$_.name -eq $workspaceName}
             }
-            else{
+            else {
                 $uri = "https://api.powerbi.com/v1.0/myorg/groups"
-            
+
                 $workspace = Invoke-RestMethod -Uri $uri -Headers $authHeader -Method GET
                 $workspaces = $workspace.value
             }
@@ -63,9 +63,9 @@ function Get-PBMWorkspace{
         catch {
             throw "Error retrieving Workspaces from API: $($_.Exception.Message)"
         }
-        
+
     }
-    End{    
+    End {
         Write-Verbose 'Returning Workspace info'
         return $workspaces
 
