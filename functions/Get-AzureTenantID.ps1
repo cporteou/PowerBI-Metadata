@@ -22,37 +22,30 @@ Get-AzureTenantID -Email 'Craig@craigporteous.com'
 #>
 function Get-AzureTenantID {
 
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Domain')]
     param
     (
-        [string]
+        [Parameter(ParameterSetName = 'Domain', ValueFromPipeline)]
+        [string[]]
         $Domain,
 
+        [Parameter(ParameterSetName = 'Email')]
         [string]
+        [ValidatePattern('.+\@.+\..+')]
         $Email
     )
 
     Process {
-        try {
-            if ($Domain) {
-                Write-Verbose 'Domain provided.'
-            }
-            elseif ($Email) {
-                Write-Verbose 'Split the string on the username to get the Domain.'
-                $Domain = $Email.Split("@")[1]
-            }
-            else {
-                throw
-                Write-Warning 'You must provide a valid Domain or User email to proceed.'
-            }
 
+        if ($Email) {
+            Write-Verbose 'Email address passed. Extract the domain.'
+            $Domain = $Email.Split("@")[1]
+        }
+
+        ForEach ($d in $Domain) {
+            Write-Verbose "Domain being used: '$d'"
             Write-Verbose 'Query Azure anonymously (this may not work for ALL tenant domains. Eg. Those that use .onmicrosoft.com)'
-            $tenantID = (Invoke-WebRequest -UseBasicParsing https://login.windows.net/$($Domain)/.well-known/openid-configuration|ConvertFrom-Json).token_endpoint.Split('/')[3]
-
+            (Invoke-WebRequest -UseBasicParsing https://login.windows.net/$($d)/.well-known/openid-configuration | ConvertFrom-Json).token_endpoint.Split('/')[3]
         }
-        catch {
-            throw $_
-        }
-        return $tenantID
     }
 }
